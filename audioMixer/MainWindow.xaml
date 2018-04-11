@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:audioMixer"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+    <Grid>
         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="50">HELLO WPF net</TextBlock>
     </Grid>
 </Window>
