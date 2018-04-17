@@ -123,7 +123,7 @@ namespace audioMixer
                     this.xGrid.Children.Add(rectangle);
                     rectangle = new Rectangle();
                     rectangle.Fill = this.backgroundColor;
-                    rectangle.Width = this.Width / 10;
+                    rectangle.Width = this.Width / 8;
                     rectangle.Height = this.Height / 2.2;
                     this.xGrid.Children.Add(rectangle);
                     break;
