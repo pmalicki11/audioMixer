@@ -4,72 +4,162 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:audioMixer"
+        xmlns:vm ="clr-namespace:audioMixer.ViewModel"
         mc:Ignorable="d"
         Title="Audio Mixer" Height="480" MinHeight="480" Width="640" MinWidth="640">
+    <Window.DataContext>
+        <vm:TracksViewModel />
+    </Window.DataContext>
     <DockPanel>
-        
-        <TextBlock Name="TitleText" Text="Audio Mixer" DockPanel.Dock="Top" Foreground="Blue" HorizontalAlignment="Center" FontFamily="Comic Sans MS" FontSize="48">
+        <TextBlock Name="TitleText"
+                   Text="Audio Mixer"
+                   DockPanel.Dock="Top"
+                   Foreground="Blue"
+                   HorizontalAlignment="Center"
+                   FontFamily="Comic Sans MS"
+                   FontSize="48">
             <TextBlock.Effect>
-                <DropShadowEffect ShadowDepth="4" Direction="330" Color="Black" Opacity="0.5" BlurRadius="4"/>
+                <DropShadowEffect ShadowDepth="4"
+                                  Direction="330"
+                                  Color="Black"
+                                  Opacity="0.5"
+                                  BlurRadius="4"/>
             </TextBlock.Effect>
         </TextBlock>
-        
-        <Grid Name="BottomControls" DockPanel.Dock="Bottom" Height="60">
-            
-            <Canvas Name="PlayAll" >
-                <local:CustomButton
-                    ButtonType="Play" 
-                    ButtonBackgroundColor="Blue" 
-                    ContentColor="DarkGray" 
-                    Size="40"
-                    Canvas.Left="10" 
-                    Canvas.Bottom="10"
-                    />
-            </Canvas>
 
-            <Canvas Name="StopAll">
-                <local:CustomButton
-                    ButtonType="Stop" 
-                    ButtonBackgroundColor="Blue" 
-                    ContentColor="DarkGray" 
-                    Size="40"
-                    Canvas.Left="60" 
-                    Canvas.Bottom="10"
-                    />
-            </Canvas>
+        <Grid x:Name="BottomControls" DockPanel.Dock="Bottom" Height="60">
+            <Button Width="50"
+                    Height="50"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="20,0,0,0">
+                <Button.Content>
+                    <Grid>
+                        <Polygon Points="5,0 26,12, 5,24" Stroke="Black" Fill="Black" />
+                    </Grid>
+                </Button.Content>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse Fill="Red" />
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Button.Template>
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
 
-            <Canvas Name="PauseAll">
-                <local:CustomButton
-                    ButtonType="Pause" 
-                    ButtonBackgroundColor="Blue" 
-                    ContentColor="DarkGray" 
-                    Size="40"
-                    Canvas.Left="110" 
-                    Canvas.Bottom="10"
-                    />
-            </Canvas>
 
-            <Canvas Name="AddTrack">
-                <local:CustomButton
-                    ButtonType="AddTrack" 
-                    ButtonBackgroundColor="Blue" 
-                    ContentColor="DarkGray" 
-                    Size="40"
-                    Canvas.Right="10" 
-                    Canvas.Bottom="10"
-                    />
-            </Canvas>
-            
+            <Button Width="50"
+                    Height="50"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="80,0,0,0">
+                <Button.Content>
+                    <Grid>
+                        <Rectangle Width="20" Height="20" Stroke="Black" Fill="Black" />
+                    </Grid>
+                </Button.Content>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse Fill="Red" />
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Button.Template>
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+
+            <Button Width="50"
+                    Height="50"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Margin="0,0,20,0">
+                <Button.Content>
+                    <Grid>
+                        <Rectangle Width="6" Height="26" Stroke="Black" Fill="Black" />
+                        <Rectangle Width="26" Height="6" Stroke="Black" Fill="Black" />
+                    </Grid>
+                </Button.Content>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse Fill="Red" />
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Button.Template>
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
         </Grid>
 
-        <Grid Name="Tracks">
-            
-                
+        <Grid x:Name="Tracks">
+            <ListBox x:Name="TracksListBox"
+                     Margin="10"
+                     ItemsSource="{Binding Path=TrackList}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Height="80">
+                            Track name: <Run Text="{Binding TrackName}" />
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
         </Grid>
-
-        
-
     </DockPanel>
-    
 </Window>
