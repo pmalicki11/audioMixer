@@ -26,7 +26,6 @@
                                   BlurRadius="4"/>
             </TextBlock.Effect>
         </TextBlock>
-
         <Grid x:Name="BottomControls" DockPanel.Dock="Bottom" Height="60">
             <Button Width="50"
                     Height="50"
@@ -35,7 +34,9 @@
                     Margin="20,0,0,0">
                 <Button.Content>
                     <Grid>
-                        <Polygon Points="5,0 26,12, 5,24" Stroke="Black" Fill="Black" />
+                        <Polygon Points="4,0 26,13, 4,26" Stroke="Black" Fill="Black" 
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"/>
                     </Grid>
                 </Button.Content>
                 <Button.Template>
@@ -72,7 +73,9 @@
                     Margin="80,0,0,0">
                 <Button.Content>
                     <Grid>
-                        <Rectangle Width="20" Height="20" Stroke="Black" Fill="Black" />
+                        <Rectangle Width="20" Height="20" Stroke="Black" Fill="Black"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
                     </Grid>
                 </Button.Content>
                 <Button.Template>
@@ -106,7 +109,8 @@
                     Height="50"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
-                    Margin="0,0,20,0">
+                    Margin="0,0,20,0"
+                    Command="{Binding Path=AddTrack}">
                 <Button.Content>
                     <Grid>
                         <Rectangle Width="6" Height="26" Stroke="Black" Fill="Black" />
@@ -139,152 +143,191 @@
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
-            </Button>        
+            </Button>
         </Grid>
-
         <Grid x:Name="Tracks">
             <ListBox x:Name="TracksListBox"
                      Margin="10"
+                     ScrollViewer.CanContentScroll="False"
                      ItemsSource="{Binding Path=TrackList}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <TextBlock Name="trackName"
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Name="leftPanel" Grid.Column="0">
+                                <Grid Margin="0,10,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Width="40" Height="40"
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                        <Button.Content>
+                                            <Grid>
+                                                <Polygon Points="5,0 20,10, 5,20" Stroke="Black" Fill="Black"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </Button.Content>
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Grid>
+                                                    <Ellipse Fill="Red" />
+                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Opacity" Value="0.8"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+                                                        <Setter Property="RenderTransform">
+                                                            <Setter.Value>
+                                                                <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                    <Button Width="40" Height="40"
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                        <Button.Content>
+                                            <Grid>
+                                                <Rectangle Width="15" Height="15" Stroke="Black" Fill="Black"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Button.Content>
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Grid>
+                                                    <Ellipse Fill="Red" />
+                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center" />
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Opacity" Value="0.8"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+                                                        <Setter Property="RenderTransform">
+                                                            <Setter.Value>
+                                                                <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </Grid>
+                                <Grid Height="100">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="15" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="15" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="0.5*" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="-" Grid.Column="0" Grid.Row="0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,4"
+                                           FontSize="15"
+                                           FontWeight="SemiBold" />
+                                    <Slider Orientation="Horizontal" Grid.Column="1" Grid.Row="0" 
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Stretch" Margin="5,0,5,0" 
+                                        Minimum="0"
+                                        Maximum="100"
+                                        Value="50"/>
+                                    <TextBlock Text="+" Grid.Column="2" Grid.Row="0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,4"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"/>
+                                    <TextBlock Text="VOLUME" Grid.Column="1" Grid.Row="1"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"/>
+                                    <TextBlock Text="L" Grid.Column="0" Grid.Row="3"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           FontWeight="SemiBold"/>
+                                    <Slider Orientation="Horizontal" Grid.Column="1" Grid.Row="3" 
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Stretch" Margin="5,0,5,0"
+                                        Minimum="-100"
+                                        Maximum="100"
+                                        Value="0" />
+                                    <TextBlock Text="R" Grid.Column="2" Grid.Row="3"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           FontWeight="SemiBold"/>
+                                    <TextBlock Text="BALANCE" Grid.Column="1" Grid.Row="4"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"/>
+                                </Grid>
+                            </StackPanel>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="20" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Name="trackName" Grid.Row="0"
                                        FontSize="12"
-                                       VerticalAlignment="Top"
+                                       VerticalAlignment="Center"
                                        HorizontalAlignment="Left">
                                 Track name: <Run Text="{Binding TrackName}" />
-                            </TextBlock>
-                            
-                            <StackPanel Name="leftStack" Orientation="Vertical"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        Margin="0,25,0,10"
-                                        Width="130">
-                                <StackPanel Name="soundButtons" Orientation="Horizontal"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Top">
-                                    <Button Width="40"
-                                            Height="40"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Margin="0,0,10,0">
-                                    <Button.Content>
-                                        <Grid>
-                                            <Polygon Points="5,0 20,10, 5,20" Stroke="Black" Fill="Black" />
-                                        </Grid>
-                                    </Button.Content>
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Grid>
-                                                <Ellipse Fill="Red" />
-                                                <ContentPresenter HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                    <Button.Style>
-                                        <Style TargetType="Button">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Opacity" Value="0.8"/>
-                                                </Trigger>
-                                                <Trigger Property="IsPressed" Value="True">
-                                                    <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
-                                                    <Setter Property="RenderTransform">
-                                                        <Setter.Value>
-                                                            <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Style>
-                                </Button>
-                                    <Button Width="40"
-                                            Height="40"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Margin="10,0,0,0">
-                                    <Button.Content>
-                                        <Grid>
-                                            <Rectangle Width="15" Height="15" Stroke="Black" Fill="Black" />
-                                        </Grid>
-                                    </Button.Content>
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Grid>
-                                                <Ellipse Fill="Red" />
-                                                <ContentPresenter HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                    <Button.Style>
-                                        <Style TargetType="Button">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Opacity" Value="0.8"/>
-                                                </Trigger>
-                                                <Trigger Property="IsPressed" Value="True">
-                                                    <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
-                                                    <Setter Property="RenderTransform">
-                                                        <Setter.Value>
-                                                            <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Style>
-                                </Button>
-                                </StackPanel>
-                                <StackPanel Name="balance" Orientation="Horizontal"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Top"
-                                        Margin="0,10,0,0">
-                                    <TextBlock Text="L"
-                                               HorizontalAlignment="Left"
-                                               VerticalAlignment="Center" />
-                                    <Slider Orientation="Horizontal"
-                                            Width="100" 
-                                            Margin="5,0,5,0"
-                                            Minimum="-100"
-                                            Maximum="100"
-                                            Value="0"
-                                            />
-                                    <TextBlock Text="R"
-                                           HorizontalAlignment="Right"
-                                           VerticalAlignment="Center" />
-                                </StackPanel>
-                            </StackPanel>
-                            
-                            
-                            <!--<Slider HorizontalAlignment="Left"
-                                    Orientation="Vertical"
-                                    VerticalAlignment="Top"
-                                    Height="50"
-                                    Margin="120,20,0,0"
-                                    />-->
-                            
-                            <Button Width="40"
-                                Height="40"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                Margin="0,0,5,0">
+                                </TextBlock>
+                                <Rectangle Fill="Azure" Grid.Row="1"/>
+                                <Slider Grid.Row="2" />
+                            </Grid> 
+                            <Button Width="40" Grid.Column="2"
+                                    Height="40"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Command="{Binding Path=DataContext.RemoveTrack, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                    CommandParameter="{Binding}">
                                 <Button.Content>
                                     <Grid>
                                         <Grid.LayoutTransform>
-                                            <RotateTransform Angle="44" />
+                                            <RotateTransform Angle="45" />
                                         </Grid.LayoutTransform>
                                         <Rectangle Width="4" Height="20" Stroke="Black" Fill="Black"
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
-                     
-                                        <Rectangle Width="22" Height="4" Stroke="Black" Fill="Black"
+
+                                        <Rectangle Width="20" Height="4" Stroke="Black" Fill="Black"
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
-                     
+
                                     </Grid>
                                 </Button.Content>
                                 <Button.Template>
@@ -322,11 +365,19 @@
                         <Setter Property="Margin" Value="3" />
                         <Setter Property="BorderBrush" Value="Black" />
                         <Setter Property="BorderThickness" Value="1" />
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />     
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Transparent" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Transparent" />
+                            </Trigger>
+                        </Style.Triggers>
                     </Style>
                 </ListBox.ItemContainerStyle>
             </ListBox>
-
         </Grid>
     </DockPanel>
 </Window>

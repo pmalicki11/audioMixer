@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using audioMixer.Model;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Windows.Input;
 
 namespace audioMixer.ViewModel
 {
@@ -58,6 +59,43 @@ namespace audioMixer.ViewModel
                         model.RemoveTrack(deletedTrack.getModel());
                     }
                     break;
+            }
+        }
+
+        private ICommand addTrack;
+        public ICommand AddTrack
+        {
+            get
+            {
+                if (addTrack == null)
+                {
+                    addTrack = new RelayCommand(
+                        o => 
+                        {
+                            TrackModel track = new TrackModel("Just added track");
+                            TrackList.Add(new TrackViewModel(track));
+                        }
+                    );
+                }
+                return addTrack;
+            }
+        }
+
+        private ICommand removeTrack;
+        public ICommand RemoveTrack
+        {
+            get
+            {
+                if (removeTrack == null)
+                {
+                    removeTrack = new RelayCommand(
+                        o =>
+                        {
+                            TrackList.Remove((TrackViewModel)o);
+                        }
+                    );
+                }
+                return removeTrack;
             }
         }
     }
