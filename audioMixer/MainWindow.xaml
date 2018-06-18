@@ -164,10 +164,12 @@
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Button Width="40" Height="40"
+                                    <Button x:Name="playTrackButton"
+                                            Width="40" Height="40" 
                                             Grid.Column="0"
                                             HorizontalAlignment="Center"
-                                            VerticalAlignment="Center">
+                                            VerticalAlignment="Center"
+                                            Command="{Binding Path=PlayTrack}">
                                         <Button.Content>
                                             <Grid>
                                                 <Polygon Points="5,0 20,10, 5,20" Stroke="Black" Fill="Black"
@@ -202,10 +204,12 @@
                                             </Style>
                                         </Button.Style>
                                     </Button>
-                                    <Button Width="40" Height="40"
+                                    <Button x:Name="stopTrackButton"
+                                            Width="40" Height="40"
                                             Grid.Column="1"
                                             HorizontalAlignment="Center"
-                                            VerticalAlignment="Center">
+                                            VerticalAlignment="Center"
+                                            Command="{Binding Path=StopTrack}">
                                         <Button.Content>
                                             <Grid>
                                                 <Rectangle Width="15" Height="15" Stroke="Black" Fill="Black"
@@ -304,10 +308,21 @@
                                        FontSize="12"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Left">
-                                Track name: <Run Text="{Binding TrackName}" />
+                                    Track name: 
+                                    <Run Text="{Binding Path=TrackName, Mode=OneWay}" />
+                                    <Run Text="{Binding Path=TrackLength, Mode=OneWay}" />
                                 </TextBlock>
                                 <Rectangle Fill="Azure" Grid.Row="1"/>
-                                <Slider Grid.Row="2" />
+                                <Slider x:Name="trackPosition"
+                                        Grid.Row="2"
+                                        Margin="0,0,60,0"
+                                        Minimum="0"
+                                        Maximum="{Binding Path=TrackLength}" 
+                                        Value="{Binding Path=CurrentPosition, Mode=OneWay}"/>
+                                <TextBlock Grid.Row="2"
+                                           HorizontalAlignment="Right"
+                                           Width="50"
+                                           Text="{Binding ElementName=trackPosition, Path=Value}" />
                             </Grid> 
                             <Button Width="40" Grid.Column="2"
                                     Height="40"

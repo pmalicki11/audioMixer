@@ -32,11 +32,7 @@ namespace audioMixer.ViewModel
             TrackList = new ObservableCollection<TrackViewModel>();
             model = new TracksModel();
 
-            model.AddTrack(new TrackModel("Metalica - Nothing else matters"));
-            model.AddTrack(new TrackModel("Rammstein - Du hast"));
-            model.AddTrack(new TrackModel("Eminem - Lose yourself"));
-            model.AddTrack(new TrackModel("AC/DC - TNT"));
-            model.AddTrack(new TrackModel("Slipknot - Psychosocial"));
+            model.AddTrack(new TrackModel(@"C:\Users\pmali\Desktop\sw.wav"));
 
             copyTracks();
         }
@@ -72,7 +68,7 @@ namespace audioMixer.ViewModel
                     addTrack = new RelayCommand(
                         o => 
                         {
-                            TrackModel track = new TrackModel("Just added track");
+                            TrackModel track = new TrackModel(@"C:\Users\pmali\Desktop\sw.wav");
                             TrackList.Add(new TrackViewModel(track));
                         }
                     );
@@ -91,6 +87,7 @@ namespace audioMixer.ViewModel
                     removeTrack = new RelayCommand(
                         o =>
                         {
+                            (o as TrackViewModel).StopTrack.Execute(o);
                             TrackList.Remove((TrackViewModel)o);
                         }
                     );
