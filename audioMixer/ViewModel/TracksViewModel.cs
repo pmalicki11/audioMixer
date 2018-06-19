@@ -33,6 +33,7 @@ namespace audioMixer.ViewModel
             model = new TracksModel();
 
             model.AddTrack(new TrackModel(@"C:\Users\pmali\Desktop\sw.wav"));
+            model.AddTrack(new TrackModel(@"C:\Users\pmali\Desktop\at.wav"));
 
             copyTracks();
         }

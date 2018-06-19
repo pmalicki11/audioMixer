@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using audioMixer.Model;
 using System.ComponentModel;
 using System.Windows.Input;
+using System.Windows.Threading;
+using System.Timers;
 
 namespace audioMixer.ViewModel
 {
@@ -13,6 +15,7 @@ namespace audioMixer.ViewModel
     {
         private TrackModel model;
         private AudioPlayer player;
+        private Timer timer;
 
         public string FileName
         {
@@ -38,7 +41,7 @@ namespace audioMixer.ViewModel
         {
             get
             {
-                return player.TrackLength().ToString();
+                return player.Length.ToString();
             }
         }
 
@@ -46,21 +49,31 @@ namespace audioMixer.ViewModel
         {
             get
             {
-                //OnPropertyChanged("CurrentPosition");
-                return player.CurrentPosition();
+                return player.Position;
             }
-            //set
-            //{
-            //    player.SetPosition(value);
-            //}
+            set
+            {
+                OnPropertyChanged("CurrentPosition");
+                player.Position = value;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public TrackViewModel(TrackModel track)
         {
-            this.model = track;
-            this.player = new AudioPlayer(model.FileName);
+            model = track;
+            player = new AudioPlayer(model.FileName, model.TrackName);
+            timer = new Timer();
+            timer.Elapsed += new ElapsedEventHandler(OnTimerTick);
+            timer.Interval = 100;
+            timer.Enabled = true;
+        }
+
+        private void OnTimerTick(object sender, ElapsedEventArgs e)
+        {
+            CurrentPosition = player.Position;
+            OnPropertyChanged("CurrentPosition");
         }
 
         private void OnPropertyChanged(params string[] propertyNames)
@@ -90,6 +103,7 @@ namespace audioMixer.ViewModel
                         o =>
                         {
                             player.Play();
+                            timer.Start();
                         }
                     );
                 }
@@ -108,6 +122,7 @@ namespace audioMixer.ViewModel
                         o =>
                         {
                             player.Stop();
+                            timer.Stop();
                         }
                     );
                 }

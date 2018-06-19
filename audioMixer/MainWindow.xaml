@@ -10,6 +10,10 @@
     <Window.DataContext>
         <vm:TracksViewModel />
     </Window.DataContext>
+    <Window.Resources>
+        <local:MilisecondsToTimeFormat x:Key="milisecondsToTimeFormat" />
+        <local:IntToTimeFormat x:Key="intToTimeFormat" />
+    </Window.Resources>
     <DockPanel>
         <TextBlock Name="TitleText"
                    Text="Audio Mixer"
@@ -310,19 +314,19 @@
                                        HorizontalAlignment="Left">
                                     Track name: 
                                     <Run Text="{Binding Path=TrackName, Mode=OneWay}" />
-                                    <Run Text="{Binding Path=TrackLength, Mode=OneWay}" />
+                                    <Run Text="{Binding Path=TrackLength, Mode=OneWay, Converter={StaticResource milisecondsToTimeFormat}}" />
                                 </TextBlock>
                                 <Rectangle Fill="Azure" Grid.Row="1"/>
                                 <Slider x:Name="trackPosition"
                                         Grid.Row="2"
                                         Margin="0,0,60,0"
-                                        Minimum="0"
-                                        Maximum="{Binding Path=TrackLength}" 
-                                        Value="{Binding Path=CurrentPosition, Mode=OneWay}"/>
+                                        Minimum="0" 
+                                        Maximum="{Binding Path=TrackLength, Mode=OneWay}"
+                                        Value="{Binding Path=CurrentPosition, Mode=TwoWay}"/>
                                 <TextBlock Grid.Row="2"
                                            HorizontalAlignment="Right"
                                            Width="50"
-                                           Text="{Binding ElementName=trackPosition, Path=Value}" />
+                                           Text="{Binding Path=CurrentPosition, Mode=OneWay, Converter={StaticResource intToTimeFormat}}"/>
                             </Grid> 
                             <Button Width="40" Grid.Column="2"
                                     Height="40"
