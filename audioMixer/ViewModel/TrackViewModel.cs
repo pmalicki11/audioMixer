@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,15 @@ namespace audioMixer.ViewModel
         private TrackModel model;
         private AudioPlayer player;
         private Timer timer;
+        public TrackViewModel(TrackModel track)
+        {
+            model = track;
+            player = new AudioPlayer(model.FileName, model.TrackName);
+            timer = new Timer();
+            timer.Elapsed += new ElapsedEventHandler(OnTimerTick);
+            timer.Interval = 100;
+            timer.Enabled = true;
+        }
 
         public string FileName
         {
@@ -28,7 +37,7 @@ namespace audioMixer.ViewModel
                 model.FileName = value;
             }
         }
-        
+
         public string TrackName
         {
             get
@@ -41,7 +50,7 @@ namespace audioMixer.ViewModel
         {
             get
             {
-                return player.Length.ToString();
+                return player.getLength().ToString();
             }
         }
 
@@ -49,33 +58,30 @@ namespace audioMixer.ViewModel
         {
             get
             {
-                return player.Position;
+                return player.getPosition();
             }
             set
             {
                 OnPropertyChanged("CurrentPosition");
-                player.Position = value;
+                player.setPosition(value);
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public TrackViewModel(TrackModel track)
-        {
-            model = track;
-            player = new AudioPlayer(model.FileName, model.TrackName);
-            timer = new Timer();
-            timer.Elapsed += new ElapsedEventHandler(OnTimerTick);
-            timer.Interval = 100;
-            timer.Enabled = true;
         }
 
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            CurrentPosition = player.Position;
-            OnPropertyChanged("CurrentPosition");
+            if (player.isOpen())
+            {
+                CurrentPosition = player.getPosition();
+                OnPropertyChanged("CurrentPosition");
+            }
         }
 
+        internal TrackModel getModel()
+        {
+            return model;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(params string[] propertyNames)
         {
             if (PropertyChanged != null)
@@ -85,11 +91,6 @@ namespace audioMixer.ViewModel
                     PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
                 }
             }
-        }
-
-        internal TrackModel getModel()
-        {
-            return model;
         }
 
         private ICommand playTrack;
@@ -128,6 +129,6 @@ namespace audioMixer.ViewModel
                 }
                 return stopTrack;
             }
-        } 
+        }
     }
 }

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using audioMixer.Model;
+﻿using audioMixer.Model;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Reflection;
 using System.Windows.Input;
 
 namespace audioMixer.ViewModel
@@ -31,8 +27,11 @@ namespace audioMixer.ViewModel
         {
             TrackList = new ObservableCollection<TrackViewModel>();
             model = new TracksModel();
+            //string assemblyPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
+            //model.AddTrack(new TrackModel(assemblyPath + "sw.wav"));
+            //model.AddTrack(new TrackModel(assemblyPath + "at.wav"));
+            //model.AddTrack(new TrackModel(@"C:\Users\pmali\Desktop\sw.wav"));
 
-            model.AddTrack(new TrackModel(@"C:\Users\pmali\Desktop\sw.wav"));
             model.AddTrack(new TrackModel(@"C:\Users\pmali\Desktop\at.wav"));
 
             copyTracks();

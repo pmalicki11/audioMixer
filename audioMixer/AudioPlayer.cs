@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -7,6 +7,7 @@ namespace audioMixer
 
     public class AudioPlayer
     {
+
         private StringBuilder message;
         private StringBuilder returnData;
         private int error;
@@ -21,128 +22,217 @@ namespace audioMixer
         {
             FileName = fileName;
             MediaName = mediaName;
-            IsPlaying = false;
-            IsPaused = false;
-            IsStopped = false;
+            Paused = false;
             message = new StringBuilder(128);
             returnData = new StringBuilder(128);
             OpenFile();
         }
 
-        //po zakończeniu sprawdzić które właściwości są używane na zewnątrz, jeżeli nie są to zamienić je na pola;
-       
         public string FileName { get; private set; }
 
         public string MediaName { get; private set; }
 
-        public int Length {
-            get
+        public bool Paused { get; private set; }
+
+        public bool OpenFile()
+        {
+            CloseFile();
+            command = "open " + FileName + " type waveaudio alias " + MediaName;
+            error = mciSendString(command, null, 0, IntPtr.Zero);
+            if (error == 0)
             {
-                if (IsOpen)
-                {
-                    command = "Status " + MediaName + " length";
-                    error = mciSendString(command, returnData, returnData.Capacity, IntPtr.Zero);
-                    return int.Parse(returnData.ToString());
-                }
-                return 0;
+                return true;
             }
-        
+            else
+            {
+                return false;
+            }
         }
 
-        public bool IsPlaying { get; private set; }
-
-        public bool IsPaused { get; private set; }
-
-        public bool IsStopped { get; private set; }
-
-        public bool IsOpen { get; set;}
+        public void CloseFile()
+        {
+            command = "close " + MediaName;
+            mciSendString(command, null, 0, IntPtr.Zero);
+        }
         
-        public int Position {
-            get
+        public bool Play()
+        {
+            if (OpenFile())
             {
-                command = "Status " + MediaName + " position";
-                error = mciSendString(command, returnData, returnData.Capacity, IntPtr.Zero);
-                if (error == 0 )
+                command = "play " + MediaName;
+                error = mciSendString(command, null, 0, IntPtr.Zero);
+                if (error == 0)
                 {
-                    return int.Parse(returnData.ToString());
-                }
-                return 0;
-            }
-            set
-            {
-                if (IsPlaying)
-                {
-                    command = "Play " + MediaName + " from " + value.ToString();
+                    return true;
                 }
                 else
                 {
-                    command = "Seek " + MediaName + " to " + value.ToString();
+                    CloseFile();
+                    return false;
                 }
-                error = mciSendString(command, returnData, returnData.Capacity, IntPtr.Zero);
             }
-        }
-
-        public void Play()
-        {
-            OpenFile();
-            command = "Play " + MediaName;
-            error = mciSendString(command, null, 0, IntPtr.Zero);
-            IsPlaying = true;
-            IsPaused = false;
-            IsStopped = false;
+            else
+            {
+                return false;
+            }
         }
 
         public void Pause()
         {
-            if (IsOpen)
+            if (Paused)
             {
-                command = "Pause " + MediaName;
-                error = mciSendString(command, null, 0, IntPtr.Zero);
-                IsPlaying = false;
-                IsPaused = true;
-                IsStopped = false;
+                Resume();
+                Paused = false;
             }
-        }
-
-        public void Resume()
-        {
-            if (IsOpen)
+            else if (isPlaying())
             {
-                command = "Resume " + MediaName;
-                error = mciSendString(command, null, 0, IntPtr.Zero);
-                IsPlaying = true;
-                IsPaused = false;
-                IsStopped = false;
+                command = "pause " + MediaName;
+                mciSendString(command, null, 0, IntPtr.Zero);
+                Paused = true;
             }
         }
 
         public void Stop()
         {
-            command = "Stop " + MediaName;
-            error = mciSendString(command, null, 0, IntPtr.Zero);
-            IsPlaying = false;
-            IsPaused = false;
-            IsStopped = true;
+            command = "stop " + MediaName;
+            mciSendString(command, null, 0, IntPtr.Zero);
+            Paused = false;
             CloseFile();
         }
 
-        public void OpenFile()
+        public void Resume()
         {
-            if (IsOpen)
-            {
-                CloseFile();
-            }
-            command = "Open " + FileName + " type waveaudio alias " + MediaName;
-            error = mciSendString(command, null, 0, IntPtr.Zero);
-            IsOpen = true;
+            command = "resume " + MediaName;
+            mciSendString(command, null, 0, IntPtr.Zero);
         }
 
-        public void CloseFile()
+        public bool isOpen()
         {
-            command = "Close " + MediaName;
-            error = mciSendString(command, null, 0, IntPtr.Zero);
-            IsOpen = false;
+            command = "status " + MediaName + " mode";
+            mciSendString(command, returnData, 128, IntPtr.Zero);
+            //if (returnData.Length == 4 && returnData.ToString().Substring(0, 4) == "open")
+            if (returnData.Length > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool isPlaying()
+        {
+            command = "status " + MediaName + " mode";
+            mciSendString(command, returnData, 128, IntPtr.Zero);
+            if (returnData.Length == 7 && returnData.ToString().Substring(0, 7) == "playing")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool isPaused()
+        {
+            command = "status " + MediaName + " mode";
+            mciSendString(command, returnData, 128, IntPtr.Zero);
+            if (returnData.Length == 6 && returnData.ToString().Substring(0, 6) == "paused")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool isStopped()
+        {
+            command = "status " + MediaName + " mode";
+            mciSendString(command, returnData, 128, IntPtr.Zero);
+            if (returnData.Length == 7 && returnData.ToString().Substring(0, 7) == "stopped")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public int getLength()
+        {
+            if (isOpen())
+            {
+                command = "status " + MediaName + " length";
+                mciSendString(command, returnData, returnData.Capacity, IntPtr.Zero);
+                return int.Parse(returnData.ToString());
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public int getPosition()
+        {
+            if (isOpen())
+            {
+                command = "status " + MediaName + " position";
+                mciSendString(command, returnData, returnData.Capacity, IntPtr.Zero);
+                return int.Parse(returnData.ToString());
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public void setPosition(int newPosition)
+        {
+            if (isPlaying())
+            {
+                command = "play " + MediaName + " from " + newPosition.ToString();
+                mciSendString(command, null, 0, IntPtr.Zero);
+            }
+            else
+            {
+                command = "seek " + MediaName + " to " + newPosition.ToString();
+                mciSendString(command, null, 0, IntPtr.Zero);
+            }
+        }
+
+        public bool setVolume(int volume)
+        {
+            if (volume >= 0 && volume <= 1000)
+            {
+                command = "setaudio " + MediaName + " volume to " + volume.ToString();
+                mciSendString(command, null, 0, IntPtr.Zero);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool setBalance(int balance)
+        {
+            if (balance >= 0 && balance <= 1000)
+            {
+                command = "setaudio " + MediaName + " left volume to " + (1000 - balance).ToString();
+                mciSendString(command, null, 0, IntPtr.Zero);
+                command = "setaudio " + MediaName + " right volume to " + balance.ToString();
+                mciSendString(command, null, 0, IntPtr.Zero);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
-
 }

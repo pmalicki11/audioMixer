@@ -327,7 +327,7 @@
                                            HorizontalAlignment="Right"
                                            Width="50"
                                            Text="{Binding Path=CurrentPosition, Mode=OneWay, Converter={StaticResource intToTimeFormat}}"/>
-                            </Grid> 
+                            </Grid>
                             <Button Width="40" Grid.Column="2"
                                     Height="40"
                                     HorizontalAlignment="Center"
