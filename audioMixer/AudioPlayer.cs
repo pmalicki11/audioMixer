@@ -16,7 +16,7 @@ namespace audioMixer
         [DllImport("winmm.dll")]
         private static extern int mciSendString(string strCommand, StringBuilder strReturn, int iReturnLength, IntPtr hwndCallback);
         [DllImport("winmm.dll")]
-        public static extern int mciGetErrorString(int errCode, StringBuilder errMsg, int buflen);
+        public static extern uint waveOutSetVolume(IntPtr mediaName, uint newVolume);
 
         public AudioPlayer(string fileName, string mediaName)
         {
@@ -36,8 +36,9 @@ namespace audioMixer
 
         public bool OpenFile()
         {
+            
             CloseFile();
-            command = "open " + FileName + " type waveaudio alias " + MediaName;
+            command = "open \"" + FileName + "\" type waveaudio alias " + MediaName;
             error = mciSendString(command, null, 0, IntPtr.Zero);
             if (error == 0)
             {
@@ -211,6 +212,12 @@ namespace audioMixer
             {
                 command = "setaudio " + MediaName + " volume to " + volume.ToString();
                 mciSendString(command, null, 0, IntPtr.Zero);
+                
+                double newVolume = ushort.MaxValue * volume / 100;
+                uint v = ((uint)newVolume) & 0xffff;
+                uint vAll = v | (v << 16);
+                waveOutSetVolume(IntPtr.Zero, vAll);
+                
                 return true;
             }
             else

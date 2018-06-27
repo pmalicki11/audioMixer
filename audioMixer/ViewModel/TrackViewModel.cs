@@ -16,6 +16,7 @@ namespace audioMixer.ViewModel
         private TrackModel model;
         private AudioPlayer player;
         private Timer timer;
+        
         public TrackViewModel(TrackModel track)
         {
             model = track;
@@ -24,6 +25,11 @@ namespace audioMixer.ViewModel
             timer.Elapsed += new ElapsedEventHandler(OnTimerTick);
             timer.Interval = 100;
             timer.Enabled = true;
+        }
+        
+        internal TrackModel getModel()
+        {
+            return model;
         }
 
         public string FileName
@@ -62,23 +68,23 @@ namespace audioMixer.ViewModel
             }
             set
             {
-                OnPropertyChanged("CurrentPosition");
                 player.setPosition(value);
+                OnPropertyChanged("CurrentPosition");
+            }
+        }
+
+        public int Volume
+        {
+            set
+            {
+                player.setVolume(value);
             }
         }
 
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            if (player.isOpen())
-            {
-                CurrentPosition = player.getPosition();
-                OnPropertyChanged("CurrentPosition");
-            }
-        }
-
-        internal TrackModel getModel()
-        {
-            return model;
+            CurrentPosition = player.getPosition();
+            //OnPropertyChanged("CurrentPosition");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -103,8 +109,10 @@ namespace audioMixer.ViewModel
                     playTrack = new RelayCommand(
                         o =>
                         {
-                            player.Play();
-                            timer.Start();
+                            if (player.Play())
+                            {
+                                timer.Start();
+                            }
                         }
                     );
                 }

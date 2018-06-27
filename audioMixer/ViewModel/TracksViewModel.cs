@@ -1,4 +1,6 @@
 ﻿using audioMixer.Model;
+using Microsoft.Win32;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reflection;
@@ -9,6 +11,11 @@ namespace audioMixer.ViewModel
     public class TracksViewModel
     {
         private TracksModel model;
+        public TracksViewModel()
+        {
+            TrackList = new ObservableCollection<TrackViewModel>();
+            model = new TracksModel();
+        }
 
         public ObservableCollection<TrackViewModel> TrackList { get; private set; }
 
@@ -21,20 +28,6 @@ namespace audioMixer.ViewModel
                 TrackList.Add(new TrackViewModel(track));
             }
             TrackList.CollectionChanged += modelSync;
-        }
-
-        public TracksViewModel()
-        {
-            TrackList = new ObservableCollection<TrackViewModel>();
-            model = new TracksModel();
-            //string assemblyPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
-            //model.AddTrack(new TrackModel(assemblyPath + "sw.wav"));
-            //model.AddTrack(new TrackModel(assemblyPath + "at.wav"));
-            //model.AddTrack(new TrackModel(@"C:\Users\pmali\Desktop\sw.wav"));
-
-            model.AddTrack(new TrackModel(@"C:\Users\pmali\Desktop\at.wav"));
-
-            copyTracks();
         }
 
         private void modelSync(object sender, NotifyCollectionChangedEventArgs e)
@@ -66,10 +59,18 @@ namespace audioMixer.ViewModel
                 if (addTrack == null)
                 {
                     addTrack = new RelayCommand(
-                        o => 
+                        o =>
                         {
-                            TrackModel track = new TrackModel(@"C:\Users\pmali\Desktop\sw.wav");
-                            TrackList.Add(new TrackViewModel(track));
+                            OpenFileDialog openFileDialog = new OpenFileDialog();
+                            openFileDialog.Filter = "WAV files (*.wav)|*.wav";
+                            openFileDialog.RestoreDirectory = true;
+
+                            if (openFileDialog.ShowDialog() == true)
+                            {
+                                TrackModel track = new TrackModel(openFileDialog.FileName);
+                                model.AddTrack(track);
+                                copyTracks();
+                            }
                         }
                     );
                 }
@@ -89,10 +90,53 @@ namespace audioMixer.ViewModel
                         {
                             (o as TrackViewModel).StopTrack.Execute(o);
                             TrackList.Remove((TrackViewModel)o);
+                            copyTracks();
                         }
                     );
                 }
                 return removeTrack;
+            }
+        }
+
+        private ICommand playAll;
+        public ICommand PlayAll
+        {
+            get
+            {
+                if (playAll == null)
+                {
+                    playAll = new RelayCommand(
+                        o =>
+                        {
+                            foreach (TrackViewModel track in TrackList)
+                            {
+                                track.PlayTrack.Execute(o);
+                            }
+                        }
+                    );
+                }
+                return playAll;
+            }
+        }
+
+        private ICommand stopAll;
+        public ICommand StopAll
+        {
+            get
+            {
+                if (stopAll == null)
+                {
+                    stopAll = new RelayCommand(
+                        o =>
+                        {
+                            foreach (TrackViewModel track in TrackList)
+                            {
+                                track.StopTrack.Execute(o);
+                            }
+                        }
+                    );
+                }
+                return stopAll;
             }
         }
     }
