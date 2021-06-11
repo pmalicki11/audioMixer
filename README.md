@@ -1,4 +1,7 @@
 # audioMixer
+
+##Project is not finished (and don't think it will be).
+
 Simple audio mixer using C#.NET WPF.
 
 The goal of task is to create simple audio mixer using C# languahe and .NET framework.
